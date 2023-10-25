@@ -1,0 +1,15 @@
+networks:
+  rediswarm:
+
+volumes:
+  redisinsight:
+
+services:
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    networks:
+      - rediswarm
+    ports:
+      - 8001:8001
+    volumes:
+      - redisinsight:/db
