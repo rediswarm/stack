@@ -1,0 +1,10 @@
+# Use hostname
+sentinel resolve-hostnames yes
+sentinel announce-hostnames yes
+
+sentinel monitor rediswarm ${REDIS_MASTER_ADDR} ${REDIS_MASTER_PORT} ${REDIS_SENTINEL_QUORUM}
+sentinel auth-pass rediswarm ${REDIS_SWARM_SECRET}
+
+sentinel down-after-milliseconds rediswarm 600
+sentinel failover-timeout rediswarm 600
+sentinel parallel-syncs rediswarm 1

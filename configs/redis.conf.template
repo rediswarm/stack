@@ -1,0 +1,13 @@
+${REDIS_SLAVEOF}
+
+masterauth "${REDIS_SWARM_SECRET}"
+requirepass "${REDIS_SWARM_SECRET}"
+
+dir "/data"
+
+# RDB
+dbfilename "dump.rdb"
+
+# AOF
+appendonly yes
+appendfilename "appendonly.aof"
