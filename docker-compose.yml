@@ -1,0 +1,56 @@
+networks:
+  redis:
+
+volumes:
+  redis:
+  redis-state:
+
+configs:
+  haproxy.cfg:
+    template_driver: golang
+    file: ./configs/haproxy.cfg
+
+services:
+  redis:
+    image: rediswarm/rediswarm:dev
+    hostname: redis-{{.Task.Slot}}
+    environment:
+      - REDIS_SLOT={{.Task.Slot}}
+      - REDIS_HOSTNAME_PREFIX=${REDIS_HOSTNAME_PREFIX:-redis-}
+      - REDIS_SWARM_SECRET=${REDIS_MASTER_AUTH:-redis-swarm}
+    networks:
+      - redis
+    volumes:
+      - redis:/data
+      - redis-state:/etc/redis/config
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+        monitor: 60s
+        max_failure_ratio: 0.3
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: pause
+        monitor: 60s
+        max_failure_ratio: 0.3
+
+  loadbalancer:
+    image: haproxytech/haproxy-alpine:latest
+    networks:
+      - redis
+    ports:
+      - "8404:8404"
+      - "6379:6379"
+      - "6380:6380"
+    configs:
+      - source: haproxy.cfg
+        target: /usr/local/etc/haproxy/haproxy.cfg
