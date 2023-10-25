@@ -11,7 +11,7 @@ deploy:
 	docker stack deploy $(compose_files) $(docker_stack_name)
 
 destroy:
-	docker stack rm $(docker_stack_name
+	docker stack rm $(docker_stack_name)
 
 scale:
 	docker service scale $(docker_stack_name)_rediswarm=$(rediswarm_replicas)
