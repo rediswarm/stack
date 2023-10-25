@@ -1,7 +1,7 @@
 ${REDIS_SLAVEOF}
 
-masterauth "${REDIS_SWARM_SECRET}"
-requirepass "${REDIS_SWARM_SECRET}"
+masterauth "{{ secret "REDIS_SWARM_SECRET" }}"
+requirepass "{{ secret "REDIS_SWARM_SECRET" }}"
 
 dir "/data"
 

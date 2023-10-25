@@ -1,14 +1,22 @@
 networks:
   rediswarm:
 
+secrets:
+  REDIS_SWARM_SECRET:
+    file: secrets/REDIS_SWARM_SECRET
+
 volumes:
   rediswarm:
+    name: rediswarm-{{.Task.Slot}}
   rediswarm-state:
+    name: rediswarm-state-{{.Task.Slot}}
 
 configs:
   redis.conf.template:
+    template_driver: golang
     file: configs/redis.conf.template
   sentinel.conf.template:
+    template_driver: golang
     file: configs/sentinel.conf.template
   haproxy.cfg:
     template_driver: golang
@@ -34,10 +42,11 @@ services:
     hostname: rediswarm-{{.Task.Slot}}
     environment:
       - REDIS_SWARM_SLOT={{.Task.Slot}}
-      - REDIS_SWARM_SECRET=${REDIS_MASTER_AUTH:-redis-swarm}
       - REDIS_HOSTNAME_PREFIX=${REDIS_HOSTNAME_PREFIX:-rediswarm-}
     networks:
       - rediswarm
+    secrets:
+      - REDIS_SWARM_SECRET
     configs:
       - source: redis.conf.template
         target: /etc/redis/templates/redis.conf.template
