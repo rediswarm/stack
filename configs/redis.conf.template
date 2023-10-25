@@ -10,4 +10,6 @@ dbfilename "dump.rdb"
 appendonly yes
 appendfilename "appendonly.aof"
 
+# Redis replication configs
+replica-announce-ip ${REDIS_HOSTNAME_PREFIX}${REDIS_SWARM_SLOT}
 ${REDIS_SLAVEOF}

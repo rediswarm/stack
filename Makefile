@@ -3,3 +3,6 @@ deploy:
 
 destroy:
 	docker stack rm rediswarm
+
+scale:
+	docker service scale rediswarm_rediswarm=5
