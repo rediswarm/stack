@@ -2,6 +2,7 @@
 sentinel resolve-hostnames yes
 sentinel announce-hostnames yes
 
+sentinel announce-ip {{ env "REDIS_HOSTNAME_PREFIX" }}{{.Task.Slot}}
 sentinel monitor rediswarm ${REDIS_MASTER_ADDR} ${REDIS_MASTER_PORT} ${REDIS_SENTINEL_QUORUM}
 sentinel auth-pass rediswarm {{ secret "REDIS_SWARM_SECRET" }}
 

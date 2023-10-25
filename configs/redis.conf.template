@@ -1,5 +1,3 @@
-${REDIS_SLAVEOF}
-
 masterauth "{{ secret "REDIS_SWARM_SECRET" }}"
 requirepass "{{ secret "REDIS_SWARM_SECRET" }}"
 
@@ -11,3 +9,5 @@ dbfilename "dump.rdb"
 # AOF
 appendonly yes
 appendfilename "appendonly.aof"
+
+${REDIS_SLAVEOF}
