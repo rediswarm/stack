@@ -26,7 +26,7 @@ pidfile /var/run/redis-sentinel.pid
 # notice (moderately verbose, what you want in production probably)
 # warning (only very important / critical messages are logged)
 # nothing (nothing is logged)
-loglevel debug
+loglevel notice
 
 # Specify the log file name. Also the empty string can be used to force
 # Sentinel to log on the standard output. Note that if you use standard
