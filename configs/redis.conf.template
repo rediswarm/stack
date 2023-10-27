@@ -1,4 +1,4 @@
-# Redis configuration file example.
+# Rediswarm default configuration file.
 #
 # Note that in order to read the configuration file, Redis must be
 # started with the file path as first argument:
@@ -84,7 +84,7 @@
 # You will also need to set a password unless you explicitly disable protected
 # mode.
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bind 127.0.0.1 -::1
+bind * -::*
 
 # By default, outgoing connections (from replica to master, from Sentinel to
 # instances, cluster bus, etc.) are not bound to a specific local address. In
@@ -135,7 +135,7 @@ protected-mode no
 
 # Accept connections on the specified port, default is 6379 (IANA #815344).
 # If port 0 is specified Redis will not listen on a TCP socket.
-port 6379
+port ${REDIS_PRIMARY_PORT}
 
 # TCP listen() backlog.
 #
@@ -347,7 +347,7 @@ pidfile /var/run/redis_6379.pid
 # notice (moderately verbose, what you want in production probably)
 # warning (only very important / critical messages are logged)
 # nothing (nothing is logged)
-loglevel notice
+loglevel verbose
 
 # Specify the log file name. Also the empty string can be used to force
 # Redis to log on the standard output. Note that if you use standard
@@ -537,7 +537,7 @@ ${REDIS_CONF_REPLICAOF}
 # starting the replication synchronization process, otherwise the master will
 # refuse the replica request.
 #
-masterauth "${REDISWARM_SECRET}"
+masterauth "{{ secret "REDISWARM_SECRET" }}"
 #
 # However this is not enough if you are using Redis ACLs (for Redis version
 # 6 or greater), and the default user is not capable of running the PSYNC
@@ -1041,7 +1041,7 @@ acllog-max-len 128
 # The requirepass is not compatible with aclfile option and the ACL LOAD
 # command, these will cause requirepass to be ignored.
 #
-requirepass "${REDISWARM_SECRET}"
+requirepass "{{ secret "REDISWARM_SECRET" }}"
 
 # New users are initialized with restrictive permissions by default, via the
 # equivalent of this ACL rule 'off resetkeys -@all'. Starting with Redis 6.2, it

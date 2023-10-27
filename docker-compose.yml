@@ -1,9 +1,14 @@
 x-redis: &x-redis
-  image: rediswarm/rediswarm:main
+  image: rediswarm/rediswarm:dev
   networks:
     - rediswarm
   secrets:
     - REDISWARM_SECRET
+  configs:
+    - source: redis.conf.template
+      target: /etc/redis/templates/redis.conf.template
+    - source: sentinel.conf.template
+      target: /etc/redis/templates/sentinel.conf.template
 
 x-deploy: &x-deploy-default
   restart_policy:
@@ -65,6 +70,23 @@ services:
       <<: *x-deploy-default
       replicas: 1
 
+  replica:
+    <<: *x-redis
+    hostname: replica-{{.Task.Slot}}
+    environment:
+      - REDISWARM_MODE=redis
+      - REDISWARM_SLOT={{.Task.Slot}}
+      - REDIS_HOSTNAME_PREFIX=${REDIS_HOSTNAME_PREFIX:-replica-}
+    volumes:
+      - redis:/data
+      - redis-config:/etc/redis/config
+    deploy: 
+      <<: *x-deploy-default
+      replicas: 5
+      placement:
+        constraints:
+          - node.labels.redis == true
+
   sentinel:
     <<: *x-redis
     hostname: sentinel-{{.Task.Slot}}
@@ -75,32 +97,12 @@ services:
       - SENTINEL_HOSTNAME_PREFIX=${REDIS_HOSTNAME_PREFIX:-sentinel-}
     volumes:
       - sentinel-config:/etc/redis/config
-    deploy: 
+    depends_on:
+      - replica
+    deploy:
       <<: *x-deploy-default
       replicas: 3
       placement:
         constraints:
           - node.role == manager
           - node.labels.redis-sentinel == true
-
-  replica:
-    <<: *x-redis
-    hostname: replica-{{.Task.Slot}}
-    environment:
-      - REDISWARM_MODE=redis
-      - REDISWARM_SLOT={{.Task.Slot}}
-      - REDIS_HOSTNAME_PREFIX=${REDIS_HOSTNAME_PREFIX:-replica-}
-    configs:
-      - source: redis.conf.template
-        target: /etc/redis/templates/redis.conf.template
-      - source: sentinel.conf.template
-        target: /etc/redis/templates/sentinel.conf.template
-    volumes:
-      - redis:/data
-      - redis-config:/etc/redis/config
-    deploy: 
-      <<: *x-deploy-default
-      replicas: 5
-      placement:
-        constraints:
-          - node.labels.redis == true

@@ -1,4 +1,4 @@
-# Example sentinel.conf
+# Rediswarm sentinel.conf
 
 # By default protected mode is disabled in sentinel mode. Sentinel is reachable
 # from interfaces different than localhost. Make sure the sentinel instance is
@@ -26,7 +26,7 @@ pidfile /var/run/redis-sentinel.pid
 # notice (moderately verbose, what you want in production probably)
 # warning (only very important / critical messages are logged)
 # nothing (nothing is logged)
-loglevel notice
+loglevel debug
 
 # Specify the log file name. Also the empty string can be used to force
 # Sentinel to log on the standard output. Note that if you use standard
@@ -108,7 +108,7 @@ sentinel monitor mymaster ${REDIS_PRIMARY_ADDR} ${REDIS_PRIMARY_PORT} ${SENTINEL
 #
 # Example:
 #
-sentinel auth-pass mymaster ${REDISWARM_SECRET}
+sentinel auth-pass mymaster {{ secret "REDISWARM_SECRET" }}
 
 # sentinel auth-user <master-name> <username>
 #
@@ -229,8 +229,8 @@ sentinel parallel-syncs mymaster 1
 #   the replicas will be reconfigured by the Sentinels anyway, but not with
 #   the exact parallel-syncs progression as specified.
 #
-# Default is 3 minutes.
-sentinel failover-timeout mymaster 180000
+# Default is 180000 or 3 minutes.
+sentinel failover-timeout mymaster 30000
 
 # SCRIPTS EXECUTION
 #
