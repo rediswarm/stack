@@ -2,7 +2,11 @@
 
 A simple Docker Stack deployment of High availability with Redis Sentinel.
 
+![image](https://github.com/rediswarm/stack/assets/4363857/5c3be12b-014b-471b-8ffe-37770194456f)
+
 ## Usage
+
+By default, this stack was designed to deploy 3 instance of `sentinel` and 5 instance of `redis`.
 
 ### Deploy
 
