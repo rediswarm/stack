@@ -7,6 +7,8 @@ volumes:
 services:
   redisinsight:
     image: redislabs/redisinsight:latest
+    environment:
+      - RILOGLEVEL=INFO
     networks:
       - rediswarm
     ports:
