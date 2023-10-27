@@ -1,5 +1,5 @@
 x-redis: &x-redis
-  image: rediswarm/rediswarm:dev
+  image: rediswarm/rediswarm:main
   networks:
     - rediswarm
   secrets:
