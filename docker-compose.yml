@@ -78,7 +78,7 @@ services:
 
   replica:
     <<: *x-redis
-    hostname: redis-{{.Task.Slot}}
+    hostname: replica-{{.Task.Slot}}
     environment:
       - REDISWARM_MODE=redis
       - REDISWARM_SLOT={{.Task.Slot}}
