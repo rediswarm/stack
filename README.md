@@ -1,11 +1,36 @@
-### Connect to Sentinel
+## About
 
-```sh
-redis-cli -p 26379
+A simple Docker Stack deployment of High availability with Redis Sentinel.
+
+## Usage
+
+### Deploy
+
+To deploy the cluster run the following command:
+
+```bash
+make deploy
+# or deploy with redisinsight
+make deploy redisinsight=true
 ```
 
-Run this command on your active sentinel to request a reset to all the sentinels within the cluster.
+### Destroy
 
-```sh
-sentinel reset *
+To destroy the cluster run the following command:
+
+```bash
+make destroy
 ```
+
+## Troubleshooting
+
+### Sentinel failed to connect to other sentinels in the cluster
+
+If you scale up/down your sentinel service chances are that the new sentinel will not be able to connect to the other sentinels in the cluster. In this case, you need to reset the sentinel cluster.
+
+Sentinels never forget already seen Sentinels, even if they are not reachable for a long time, since we don't want to dynamically change the majority needed to authorize a failover and the creation of a new configuration number.
+
+So in order to remove a Sentinel the following steps should be performed in absence of network partitions:
+
+- Send a SENTINEL RESET * command to all the other Sentinel instances (instead of * you can use the exact master name if you want to reset just a single master). One after the other, waiting at least 30 seconds between instances.
+- Check that all the Sentinels agree about the number of Sentinels currently active, by inspecting the output of SENTINEL MASTER mastername of every Sentinel.
