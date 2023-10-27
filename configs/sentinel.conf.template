@@ -130,7 +130,7 @@ sentinel auth-pass mymaster {{ secret "REDISWARM_SECRET" }}
 # Down).
 #
 # Default is 30 seconds.
-sentinel down-after-milliseconds mymaster 30000
+sentinel down-after-milliseconds mymaster 15000
 
 # IMPORTANT NOTE: starting with Redis 6.2 ACL capability is supported for
 # Sentinel mode, please refer to the Redis website https://redis.io/topics/acl
