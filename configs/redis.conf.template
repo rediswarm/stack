@@ -1,5 +1,5 @@
-masterauth "{{ secret "REDIS_SWARM_SECRET" }}"
-requirepass "{{ secret "REDIS_SWARM_SECRET" }}"
+masterauth "{{ secret "REDISWARM_SECRET" }}"
+requirepass "{{ secret "REDISWARM_SECRET" }}"
 
 dir "/data"
 

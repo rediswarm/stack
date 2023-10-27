@@ -4,8 +4,7 @@ sentinel announce-hostnames yes
 
 sentinel announce-ip ${SENTINEL_HOSTNAME_PREFIX}${REDISWARM_SLOT}
 sentinel monitor rediswarm ${REDIS_PRIMARY_ADDR} ${REDIS_PRIMARY_PORT} ${SENTINEL_QUORUM}
-sentinel auth-pass rediswarm ${REDISWARM_SECRET}
-
+sentinel auth-pass rediswarm {{ secret "REDISWARM_SECRET" }}
 sentinel down-after-milliseconds rediswarm 600
 sentinel failover-timeout rediswarm 600
 sentinel parallel-syncs rediswarm 1
