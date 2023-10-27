@@ -61,6 +61,9 @@ services:
     configs:
       - source: haproxy.cfg
         target: /usr/local/etc/haproxy/haproxy.cfg
+    deploy: 
+      <<: *x-deploy-default
+      replicas: 1
 
   sentinel:
     <<: *x-redis
@@ -75,6 +78,10 @@ services:
     deploy: 
       <<: *x-deploy-default
       replicas: 3
+      placement:
+        constraints:
+          - node.role == manager
+          - node.labels.redis-sentinel == true
 
   replica:
     <<: *x-redis
@@ -94,3 +101,6 @@ services:
     deploy: 
       <<: *x-deploy-default
       replicas: 5
+      placement:
+        constraints:
+          - node.labels.redis == true
