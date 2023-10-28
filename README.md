@@ -38,3 +38,6 @@ So in order to remove a Sentinel the following steps should be performed in abse
 
 - Send a SENTINEL RESET * command to all the other Sentinel instances (instead of * you can use the exact master name if you want to reset just a single master). One after the other, waiting at least 30 seconds between instances.
 - Check that all the Sentinels agree about the number of Sentinels currently active, by inspecting the output of SENTINEL MASTER mastername of every Sentinel.
+
+${REDISWARM_SECRET}
+{{ secret "REDISWARM_SECRET" }}

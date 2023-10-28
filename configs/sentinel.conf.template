@@ -1,5 +1,7 @@
 # Rediswarm sentinel.conf
 
+bind 0.0.0.0
+
 # By default protected mode is disabled in sentinel mode. Sentinel is reachable
 # from interfaces different than localhost. Make sure the sentinel instance is
 # protected from the outside world via firewalling or other means.
@@ -7,7 +9,8 @@ protected-mode no
 
 # port <sentinel-port>
 # The port that this sentinel instance will run on
-port 26379
+# Default port 26379
+port ${REDIS_SENTINEL_PORT}
 
 # By default Redis Sentinel does not run as a daemon. Use 'yes' if you need it.
 # Note that Redis will write a pid file in /var/run/redis-sentinel.pid when
@@ -63,7 +66,7 @@ logfile ""
 #
 # Example:
 #
-sentinel announce-ip ${SENTINEL_HOSTNAME_PREFIX}${REDISWARM_SLOT}
+sentinel announce-ip ${REDIS_SENTINEL_HOSTNAME_PREFIX}${REDISWARM_SLOT}
 
 # dir <working-directory>
 # Every long running process should have a well-defined working directory.
@@ -89,7 +92,7 @@ dir /tmp
 #
 # Note: master name should not include special characters or spaces.
 # The valid charset is A-z 0-9 and the three characters ".-_".
-sentinel monitor mymaster ${REDIS_PRIMARY_ADDR} ${REDIS_PRIMARY_PORT} ${SENTINEL_QUORUM}
+sentinel monitor mymaster ${REDIS_PRIMARY_ADDR} ${REDIS_PRIMARY_PORT} ${REDIS_SENTINEL_QUORUM}
 
 # sentinel auth-pass <master-name> <password>
 #
@@ -108,7 +111,7 @@ sentinel monitor mymaster ${REDIS_PRIMARY_ADDR} ${REDIS_PRIMARY_PORT} ${SENTINEL
 #
 # Example:
 #
-sentinel auth-pass mymaster {{ secret "REDISWARM_SECRET" }}
+sentinel auth-pass mymaster ${REDISWARM_SECRET}
 
 # sentinel auth-user <master-name> <username>
 #

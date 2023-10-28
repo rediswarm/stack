@@ -1,5 +1,5 @@
 x-redis: &x-redis
-  image: rediswarm/rediswarm:main
+  image: rediswarm/rediswarm:dev
   networks:
     - rediswarm
   secrets:
@@ -70,23 +70,6 @@ services:
       <<: *x-deploy-default
       replicas: 1
 
-  replica:
-    <<: *x-redis
-    hostname: replica-{{.Task.Slot}}
-    environment:
-      - REDISWARM_MODE=redis
-      - REDISWARM_SLOT={{.Task.Slot}}
-      - REDIS_HOSTNAME_PREFIX=${REDIS_HOSTNAME_PREFIX:-replica-}
-    volumes:
-      - redis:/data
-      - redis-config:/etc/redis/config
-    deploy: 
-      <<: *x-deploy-default
-      replicas: 5
-      placement:
-        constraints:
-          - node.labels.redis == true
-
   sentinel:
     <<: *x-redis
     hostname: sentinel-{{.Task.Slot}}
@@ -94,11 +77,10 @@ services:
       - REDISWARM_MODE=sentinel
       - REDISWARM_SLOT={{.Task.Slot}}
       - REDIS_HOSTNAME_PREFIX=${REDIS_HOSTNAME_PREFIX:-replica-}
-      - SENTINEL_HOSTNAME_PREFIX=${REDIS_HOSTNAME_PREFIX:-sentinel-}
+      - REDIS_SENTINEL_HOSTNAME_PREFIX=${REDIS_SENTINEL_HOSTNAME_PREFIX:-sentinel-}
+      - REDISWARM_SECRET_FILE=/run/secrets/REDISWARM_SECRET
     volumes:
       - sentinel-config:/etc/redis/config
-    depends_on:
-      - replica
     deploy:
       <<: *x-deploy-default
       replicas: 3
@@ -106,3 +88,24 @@ services:
         constraints:
           - node.role == manager
           - node.labels.redis-sentinel == true
+
+  replica:
+    <<: *x-redis
+    hostname: replica-{{.Task.Slot}}
+    environment:
+      - REDISWARM_MODE=redis
+      - REDISWARM_SLOT={{.Task.Slot}}
+      - REDIS_HOSTNAME_PREFIX=${REDIS_HOSTNAME_PREFIX:-replica-}
+      - REDIS_SENTINEL_ADDR=${REDIS_SENTINEL_ADDR:-sentinel}
+      - REDISWARM_SECRET_FILE=/run/secrets/REDISWARM_SECRET
+    volumes:
+      - redis:/data
+      - redis-config:/etc/redis/config
+    depends_on:
+      - sentinel
+    deploy:
+      <<: *x-deploy-default
+      replicas: 5
+      placement:
+        constraints:
+          - node.labels.redis == true
