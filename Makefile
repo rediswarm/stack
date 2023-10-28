@@ -1,3 +1,5 @@
+-include .env
+
 compose_files := -c docker-compose.yml
 docker_stack_name := rediswarm
 replicas := 3
