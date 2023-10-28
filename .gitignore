@@ -1,1 +1,5 @@
+.vscode/
+.env
+.env.*
+!.env.example
 docker-compose.*.yml
