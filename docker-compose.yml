@@ -76,9 +76,9 @@ services:
     environment:
       - REDISWARM_MODE=sentinel
       - REDISWARM_SLOT={{.Task.Slot}}
+      - REDISWARM_SECRET_FILE=/run/secrets/REDISWARM_SECRET
       - REDIS_HOSTNAME_PREFIX=${REDIS_HOSTNAME_PREFIX:-replica-}
       - REDIS_SENTINEL_HOSTNAME_PREFIX=${REDIS_SENTINEL_HOSTNAME_PREFIX:-sentinel-}
-      - REDISWARM_SECRET_FILE=/run/secrets/REDISWARM_SECRET
     volumes:
       - sentinel-config:/etc/redis/config
     deploy:
@@ -95,9 +95,9 @@ services:
     environment:
       - REDISWARM_MODE=redis
       - REDISWARM_SLOT={{.Task.Slot}}
+      - REDISWARM_SECRET_FILE=/run/secrets/REDISWARM_SECRET
       - REDIS_HOSTNAME_PREFIX=${REDIS_HOSTNAME_PREFIX:-replica-}
       - REDIS_SENTINEL_ADDR=${REDIS_SENTINEL_ADDR:-sentinel}
-      - REDISWARM_SECRET_FILE=/run/secrets/REDISWARM_SECRET
     volumes:
       - redis:/data
       - redis-config:/etc/redis/config
