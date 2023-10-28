@@ -4,11 +4,6 @@ x-redis: &x-redis
     - rediswarm
   secrets:
     - REDISWARM_SECRET
-  configs:
-    - source: redis.conf.template
-      target: /etc/redis/templates/redis.conf.template
-    - source: sentinel.conf.template
-      target: /etc/redis/templates/sentinel.conf.template
 
 x-deploy: &x-deploy-default
   restart_policy:
@@ -42,12 +37,6 @@ secrets:
     file: secrets/REDISWARM_SECRET
 
 configs:
-  redis.conf.template:
-    template_driver: golang
-    file: configs/redis.conf.template
-  sentinel.conf.template:
-    template_driver: golang
-    file: configs/sentinel.conf.template
   haproxy.cfg:
     template_driver: golang
     file: configs/haproxy.cfg
