@@ -28,6 +28,20 @@ make destroy
 
 ## Troubleshooting
 
+### Testing failover
+
+To test the failover you can follow the following steps:
+
+1. Run `docker exec` on to one of the replica or primary redis instance.
+   ```bash
+   docker exec -it rediswarm_replica_1 bash
+   ```
+2. Run the following command:
+    ```bash
+    source /.rediswarm
+    REDISCLI_AUTH=${REDISWARM_SECRET} redis-cli DEBUG sleep 30
+    ```
+
 ### Sentinel failed to connect to other sentinels in the cluster
 
 If you scale up/down your sentinel service chances are that the new sentinel will not be able to connect to the other sentinels in the cluster. In this case, you need to reset the sentinel cluster.
@@ -38,6 +52,3 @@ So in order to remove a Sentinel the following steps should be performed in abse
 
 - Send a SENTINEL RESET * command to all the other Sentinel instances (instead of * you can use the exact master name if you want to reset just a single master). One after the other, waiting at least 30 seconds between instances.
 - Check that all the Sentinels agree about the number of Sentinels currently active, by inspecting the output of SENTINEL MASTER mastername of every Sentinel.
-
-${REDISWARM_SECRET}
-{{ secret "REDISWARM_SECRET" }}
