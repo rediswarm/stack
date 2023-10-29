@@ -75,7 +75,6 @@ services:
       replicas: 3
       placement:
         constraints:
-          - node.role == manager
           - node.labels.redis-sentinel == true
 
   replica:
