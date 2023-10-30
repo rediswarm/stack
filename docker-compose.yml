@@ -72,7 +72,7 @@ services:
       - sentinel-config:/etc/redis/config
     deploy:
       <<: *x-deploy-default
-      replicas: 3
+      replicas: ${REDIS_SENTINEL_REPLICAS:-3}
       placement:
         constraints:
           - node.labels.redis-sentinel == true
@@ -93,7 +93,7 @@ services:
       - sentinel
     deploy:
       <<: *x-deploy-default
-      replicas: 5
+      replicas: ${REDIS_REPLICAS:-5}
       placement:
         constraints:
           - node.labels.redis == true
