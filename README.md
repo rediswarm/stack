@@ -28,6 +28,15 @@ make destroy
 
 ## Troubleshooting
 
+### Benchmarking
+
+To benchmark redis you can run `docker exec` on to one of the replica or primary redis instance.
+
+```bash
+source /.rediswarm
+redis-benchmark -a ${REDISWARM_SECRET} -q -n 100000
+```
+
 ### Testing failover
 
 To test the failover you can follow the following steps:
