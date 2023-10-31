@@ -93,7 +93,7 @@ services:
       - sentinel
     deploy:
       <<: *x-deploy-default
-      replicas: ${REDIS_REPLICAS:-5}
+      replicas: ${REDIS_REPLICAS:-3}
       placement:
         constraints:
           - node.labels.redis == true
